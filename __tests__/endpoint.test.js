@@ -3,7 +3,6 @@ const request = require("supertest");
 const testData = require("../db/data/test-data");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
-const { values } = require("../db/data/test-data/articles");
 
 afterAll(() => {
   return db.end();
@@ -41,6 +40,18 @@ describe("/api/topics", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Not Found");
+      });
+  });
+});
+describe("/api", () => {
+  test("/api responds by creating a JSON file with all of the possible endpoints from /api", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        body.forEach((bodies) => {
+          expect(bodies.path).toBe(["/api/topics", "/api/nvnewbs"]);
+        });
       });
   });
 });
