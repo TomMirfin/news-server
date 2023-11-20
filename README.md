@@ -10,4 +10,4 @@ To replicate this on your pc, you can do the following steps:
 
 1. Create a .env.test file and a .env.development file
 2. in the setup.sql file there are two commands CREATE and DROP
-3. add the relevent commands into the relevant file i.e
+3. add the relevent commands into the relevant file i.e CREATE server, DROP server
