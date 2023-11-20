@@ -1,8 +1,5 @@
 const { selectTopics } = require("../model/topics-model");
 
-const listEndpoints = require("express-list-endpoints");
-const app = require("../app");
-
 exports.getAllTopics = (req, res, next) => {
   selectTopics()
     .then((topics) => {
@@ -12,7 +9,7 @@ exports.getAllTopics = (req, res, next) => {
 };
 
 exports.getAllEndPoints = (req, res, next) => {
-  listEndpoints(app).then((endPoints) => {
+  listEndpoints().then((endPoints) => {
     console.log(endPoints);
     res.status(200).send(endPoints);
   });

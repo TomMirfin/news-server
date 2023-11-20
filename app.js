@@ -14,25 +14,25 @@ app.use(express.json());
 
 app.get("/api/topics", getAllTopics);
 
-app.get("/api/", getAllEndPoints);
+app.get("/api", getAllEndPoints);
 
-const endPoints = listEndpoints(app);
-const description = { description: "this endpoint updates" };
-const fileContentArray = [];
-const newFileContent = {
-  fileContentArray: fileContentArray,
-};
+// const endPoints = listEndpoints(app);
+// const description = { description: "this endpoint updates" };
+// const fileContentArray = [];
+// const newFileContent = {
+//   fileContentArray: fileContentArray,
+// };
 
-endPoints.map((endpointsPath) => fileContentArray.push(endpointsPath));
+// endPoints.map((endpointsPath) => fileContentArray.push(endpointsPath));
 
-const path = "./allEndPoints.json";
-fs.writeFile(path, JSON.stringify(newFileContent), (err) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log("file written successfully");
-  }
-});
+// const path = "./allEndPoints.json";
+// fs.writeFile(path, JSON.stringify(newFileContent), (err) => {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log("file written successfully");
+//   }
+// });
 
 app.use(handleCustomError);
 app.use(handleServerErrors);

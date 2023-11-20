@@ -43,15 +43,27 @@ describe("/api/topics", () => {
       });
   });
 });
-// describe("/api", () => {
-//   test("/api responds by creating a JSON file with all of the possible endpoints from /api", () => {
-//     return request(app)
-//       .get("/api")
-//       .expect(200)
-//       .then(({ body }) => {
-//         body.forEach((bodies) => {
-//           expect(bodies.path).toBe(["/api/topics", "/api/nvnewbs"]);
-//         });
-//       });
-//   });
-// });
+describe("/api", () => {
+  test("/api responds by creating a JSON file with all of the possible endpoints from /api", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        body.forEach((bodies) => {
+          expect(bodies.path).toMatchObject({
+            "GET /api": {
+              description:
+                "serves up a json representation of all the available endpoints of the api",
+            },
+            "GET /api/topics": {
+              description: "serves an array of all topics",
+              queries: [],
+              exampleResponse: {
+                topics: [{ slug: "football", description: "Footie!" }],
+              },
+            },
+          });
+        });
+      });
+  });
+});

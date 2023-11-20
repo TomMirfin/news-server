@@ -1,1 +1,0 @@
-{"fileContentArray":[{"path":"/api/topics","methods":["GET"],"middlewares":["anonymous"]},{"path":"/api/","methods":["GET"],"middlewares":["anonymous"]}]}
