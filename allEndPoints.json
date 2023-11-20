@@ -1,1 +1,1 @@
-{"fileContentArray":[{"path":"/api/topics","methods":["GET"],"middlewares":["anonymous"]},{"path":"/api/","methods":["GET"],"middlewares":["anonymous"]}],"description":{"description":"this endpoint updates"}}
+{"fileContentArray":[{"path":"/api/topics","methods":["GET"],"middlewares":["anonymous"]},{"path":"/api/","methods":["GET"],"middlewares":["anonymous"]}]}

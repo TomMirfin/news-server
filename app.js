@@ -21,7 +21,6 @@ const description = { description: "this endpoint updates" };
 const fileContentArray = [];
 const newFileContent = {
   fileContentArray: fileContentArray,
-  ["description"]: description,
 };
 
 endPoints.map((endpointsPath) => fileContentArray.push(endpointsPath));
