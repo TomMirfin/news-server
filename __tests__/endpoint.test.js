@@ -19,10 +19,20 @@ describe("/api/topics", () => {
       .get("/api/topics")
       .expect(200)
       .then(({ body }) => {
-        expect(body[0]).toMatchObject({
-          description: "The man, the Mitch, the legend",
-          slug: "mitch",
-        });
+        expect(body).toMatchObject([
+          {
+            description: "The man, the Mitch, the legend",
+            slug: "mitch",
+          },
+          {
+            description: "Not dogs",
+            slug: "cats",
+          },
+          {
+            description: "what books are made of",
+            slug: "paper",
+          },
+        ]);
       });
   });
   test("status:404, responds with an error message when passed a bad path", () => {

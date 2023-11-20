@@ -5,8 +5,8 @@ exports.getAllTopics = (req, res, next) => {
   const path = req.path;
   console.log(path);
   if (path.includes("/api/topics")) {
-    selectTopics().then((articles) => {
-      res.status(200).send(articles);
+    selectTopics().then((topics) => {
+      res.status(200).send(topics);
     });
   } else {
     res.status(404).send({ msg: "Not Found" });
