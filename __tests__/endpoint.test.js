@@ -40,7 +40,6 @@ describe("/api/topics", () => {
       .get("/api/nvnewbs")
       .expect(404)
       .then(({ body }) => {
-        console.log(body, "<-- resp");
         expect(body.msg).toBe("Not Found");
       });
   });
