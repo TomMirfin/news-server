@@ -1,14 +1,14 @@
 const db = require("../db/connection.js");
-const listEndpoints = require("express-list-endpoints");
-const app = require("../app.js");
+
+const fs = require("fs/promises");
 
 exports.selectTopics = (req, res) => {
   return db.query("SELECT * FROM topics").then((res) => {
     return res.rows;
   });
 };
-exports.listEndpoints = (req, res) => {
-  console.log("in model");
-  console.log(listEndpoints(app));
-  return listEndpoints(app);
+exports.listEndpoints = () => {
+  return fs.readFile("endpoints.json", "utf-8").then((result) => {
+    return result;
+  });
 };

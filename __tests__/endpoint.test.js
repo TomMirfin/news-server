@@ -3,7 +3,7 @@ const request = require("supertest");
 const testData = require("../db/data/test-data");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
-
+const endpointJSON = require("../endpoints.json");
 afterAll(() => {
   return db.end();
 });
@@ -43,27 +43,29 @@ describe("/api/topics", () => {
       });
   });
 });
-// describe("/api", () => {
-//   test("/api responds by creating a JSON file with all of the possible endpoints from /api", () => {
-//     return request(app)
-//       .get("/api")
-//       .expect(200)
-//       .then(({ body }) => {
-//         body.forEach((bodies) => {
-//           expect(bodies.path).toMatchObject({
-//             "GET /api": {
-//               description:
-//                 "serves up a json representation of all the available endpoints of the api",
-//             },
-//             "GET /api/topics": {
-//               description: "serves an array of all topics",
-//               queries: [],
-//               exampleResponse: {
-//                 topics: [{ slug: "football", description: "Footie!" }],
-//               },
-//             },
-//           });
-//         });
-//       });
-//   });
-// });
+describe("/api", () => {
+  test("/api responds by creating a file matching that of the example.json file", () => {
+    return request(app)
+      .get(`/api`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.API).toMatchObject(endpointJSON);
+      });
+  });
+  test("/api responds by creating a file matching that of the example.json file and ensuring property types are correct", () => {
+    return request(app)
+      .get(`/api`)
+      .expect(200)
+      .then(({ body }) => {
+        for (let keys in body.API) {
+          if (!body.API[keys].queries && !body.API[keys].exampleResonse) {
+            expect(typeof body.API[keys].description).toBe("string");
+          } else {
+            expect(typeof body.API[keys].description).toBe("string");
+            expect(typeof body.API[keys].queries).toBe("object");
+            expect(typeof body.API[keys].exampleResponse).toBe("object");
+          }
+        }
+      });
+  });
+});
