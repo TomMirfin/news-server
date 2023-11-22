@@ -5,7 +5,15 @@ exports.getAllTopics = (req, res, next) => {
     .then((topics) => {
       res.status(200).send(topics);
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
+};
+
+exports.getAllEndPoints = (req, res, next) => {
+  listEndpoints()
+    .then((endPoints) => {
+      const parsedEndpoint = JSON.parse(endPoints);
+
+      res.status(200).send({ API: parsedEndpoint });
+    })
+    .catch(next);
 };
