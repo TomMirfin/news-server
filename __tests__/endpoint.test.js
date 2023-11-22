@@ -39,7 +39,6 @@ describe("/api/topics", () => {
       .get("/api/nvnewbs")
       .expect(404)
       .then(({ body }) => {
-        console.log(body, "<--- body");
         expect(body.msg).toBe("bad request");
       });
   });
@@ -88,7 +87,7 @@ describe("/api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
+        expect(body.length).toBe(13);
         expect(body).toBeSortedBy(body.created_at, { descending: true });
       });
   });
@@ -97,8 +96,8 @@ describe("/api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
+        expect(body.length).toBe(13);
         body.forEach((article) => {
-          console.log(body);
           expect(typeof article.author).toBe("string");
           expect(typeof article.title).toBe("string");
           expect(typeof article.article_id).toBe("number");
