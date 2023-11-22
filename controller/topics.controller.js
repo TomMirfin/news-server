@@ -12,7 +12,7 @@ exports.getAllEndPoints = (req, res, next) => {
   listEndpoints()
     .then((endPoints) => {
       const parsedEndpoint = JSON.parse(endPoints);
-      console.log(typeof parsedEndpoint);
+
       res.status(200).send({ API: parsedEndpoint });
     })
     .catch(next);
