@@ -4,8 +4,17 @@ const {
   getAllTopics,
   getAllEndPoints,
 } = require("./controller/topics.controller");
-const { handleServerErrors, handleNotFoundError } = require("./errors");
-const { getAllArticles } = require("./controller/articles.controller");
+
+const {
+  getAllArticles,
+  getArticlesById,
+} = require("./controller/articles.controller");
+
+const {
+  handleCustomErrors,
+  handleNotFoundError,
+  handleServerErrors,
+} = require("./errors");
 
 const app = express();
 
@@ -16,10 +25,10 @@ app.get("/api/topics", getAllTopics);
 app.get("/api", getAllEndPoints);
 
 app.get("/api/articles", getAllArticles);
+app.get("/api/articles/:article_id", getArticlesById);
+app.all("*", handleNotFoundError);
 
-app.use(handleNotFoundError);
+app.use(handleCustomErrors);
 app.use(handleServerErrors);
-
-app.all("/*");
 
 module.exports = app;
