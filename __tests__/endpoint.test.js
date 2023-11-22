@@ -3,7 +3,7 @@ const request = require("supertest");
 const testData = require("../db/data/test-data");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
-const endpointJSON = require("../endpoints.json");
+
 afterAll(() => {
   return db.end();
 });
@@ -34,38 +34,51 @@ describe("/api/topics", () => {
         ]);
       });
   });
-  test("status:404, responds with an error message when passed a bad path", () => {
+  test("status:400, responds with an error message when passed a bad path", () => {
     return request(app)
       .get("/api/nvnewbs")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Not Found");
+        console.log(body, "<--- body");
+        expect(body.msg).toBe("bad request");
       });
   });
 });
-describe("/api", () => {
-  test("/api responds by creating a file matching that of the example.json file", () => {
+describe("/api/articles/", () => {
+  test("200: responds with articles related to ID", () => {
     return request(app)
-      .get(`/api`)
+      .get("/api/articles/1")
       .expect(200)
       .then(({ body }) => {
-        expect(body.API).toMatchObject(endpointJSON);
+        expect(body).toMatchObject([
+          {
+            article_id: 1,
+            title: "Living in the shadow of a great man",
+            topic: "mitch",
+            author: "butter_bridge",
+            body: "I find this existence challenging",
+            created_at: "2020-07-09T20:11:00.000Z",
+            votes: 100,
+            article_img_url:
+              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          },
+        ]);
       });
   });
-  test("/api responds by creating a file matching that of the example.json file and ensuring property types are correct", () => {
+  test("404: responds with AN error when there are no articles related to ID", () => {
     return request(app)
-      .get(`/api`)
-      .expect(200)
+      .get("/api/articles/654445666")
+      .expect(404)
       .then(({ body }) => {
-        for (let keys in body.API) {
-          if (!body.API[keys].queries && !body.API[keys].exampleResonse) {
-            expect(typeof body.API[keys].description).toBe("string");
-          } else {
-            expect(typeof body.API[keys].description).toBe("string");
-            expect(typeof body.API[keys].queries).toBe("object");
-            expect(typeof body.API[keys].exampleResponse).toBe("object");
-          }
-        }
+        expect(body.msg).toBe("not found");
+      });
+  });
+  test("500: responds with AN error when there are no articles related to ID", () => {
+    return request(app)
+      .get("/api/articles/notANumber")
+      .expect(500)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Internal Server Error");
       });
   });
 });
