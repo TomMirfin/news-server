@@ -5,11 +5,12 @@ exports.selectComments = (article_id) => {
 
   return db
     .query(
-      "SELECT * FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id WHERE articles.article_id = $1;",
-      [article_id]
+      "SELECT comments.*, articles.article_id, FROM comments LEFT JOIN articles ON articles.article_id = comments.article_id WHERE articles.article_id = $1;"[
+        article_id
+      ]
     )
     .then(({ rows }) => {
-      console.log(rows);
+      console.log(rows, "<---- rows in comments-model");
       return rows;
     });
 };

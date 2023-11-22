@@ -82,13 +82,13 @@ describe("/api/articles/", () => {
       });
   });
 });
-// describe("/api/articles/:article_id/comments", () => {
-//   test("The endpoint will respond with an array of comments from the given article ID", () => {
-//     return request(app)
-//       .get("/api/articles/1/comments")
-//       .expect(200)
-//       .then(({ body }) => {
-//         expect(body.msg).toBe("Internal Server Error");
-//       });
-//   });
-// });
+describe("/api/articles/:article_id/comments", () => {
+  test("The endpoint will respond with an array of comments from the given article ID", () => {
+    return request(app)
+      .get("/api/articles/9/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.msg).toBe(["The owls are not what they seem."]);
+      });
+  });
+});
