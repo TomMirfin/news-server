@@ -73,4 +73,12 @@ describe("/api/articles/", () => {
         expect(body.msg).toBe("not found");
       });
   });
+  test("500: responds with AN error when there are no articles related to ID", () => {
+    return request(app)
+      .get("/api/articles/notANumber")
+      .expect(500)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Internal Server Error");
+      });
+  });
 });
