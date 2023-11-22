@@ -118,3 +118,35 @@ describe("/api/articles", () => {
       });
   });
 });
+describe("/api/articles/:article_id/comments", () => {
+  test(" Posts a new comment into an article with a given ID", () => {
+    const newComment = {
+      username: "rogersop",
+      body: "Hello this is my new comment",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body).toMatchObject({
+          body: "Hello this is my new comment",
+          author: "rogersop",
+        });
+      });
+  });
+  test("404: If a new comment is posted with a username that doesn't exist an error will be returned", () => {
+    const newComment = {
+      username: "TomdaBomb",
+      body: "Hello this is my new comment",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        console.log(body);
+        expect(body.msg).toBe("No username found");
+      });
+  });
+});
