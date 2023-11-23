@@ -7,11 +7,9 @@ exports.postCommentByID = (req, res, next) => {
 
   postComment(newComment, article_id)
     .then((comment) => {
-      console.log(comment, "<--- comment in controller");
       res.status(201).send(comment);
     })
     .catch((err) => {
-      console.log(err.code);
       next(err);
     });
 };

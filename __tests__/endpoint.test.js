@@ -120,38 +120,6 @@ describe("/api/articles", () => {
       });
   });
 });
-describe("/api/articles/:article_id/comments", () => {
-  test(" Posts a new comment into an article with a given ID", () => {
-    const newComment = {
-      username: "rogersop",
-      body: "Hello this is my new comment",
-    };
-    return request(app)
-      .post("/api/articles/1/comments")
-      .send(newComment)
-      .expect(201)
-      .then(({ body }) => {
-        expect(body).toMatchObject({
-          body: "Hello this is my new comment",
-          author: "rogersop",
-        });
-      });
-  });
-  test("404: If a new comment is posted with a username that doesn't exist an error will be returned", () => {
-    const newComment = {
-      username: "TomdaBomb",
-      body: "Hello this is my new comment",
-    };
-    return request(app)
-      .post("/api/articles/1/comments")
-      .send(newComment)
-      .expect(404)
-      .then(({ body }) => {
-        console.log(body);
-        expect(body.msg).toBe("No username found");
-      });
-  });
-});
 
 describe("/api/articles/:article_id/comments", () => {
   test("The endpoint will respond with an array of comments from the given article ID", () => {
@@ -188,7 +156,7 @@ describe("/api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("not found");
       });
   });
-  test("404 given an article ID which is not of the right structure the endpoint will respond with an error", () => {
+  test("400 given an article ID which is not of the right structure the endpoint will respond with an error", () => {
     return request(app)
       .get("/api/articles/banana/comments")
       .expect(400)
@@ -203,6 +171,51 @@ describe("/api/articles/:article_id/comments", () => {
       .expect(200)
       .then(({ body }) => {
         expect(body.comments).toEqual([]);
+      });
+  });
+});
+describe("POST /api/articles/:article_id/comments", () => {
+  test("Posts a new comment into an article with a given ID", () => {
+    const newComment = {
+      username: "rogersop",
+      body: "Hello this is my new comment",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body).toMatchObject({
+          body: "Hello this is my new comment",
+          author: "rogersop",
+        });
+      });
+  });
+
+  test("404: If a new comment is posted with a username that doesn't exist an error will be returned", () => {
+    const newComment = {
+      username: "TomdaBomb",
+      body: "Hello this is my new comment",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("No username found");
+      });
+  });
+
+  test("400 returns an error if a comment is not complete", () => {
+    const newComment = {
+      username: "rogersop",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
       });
   });
 });
