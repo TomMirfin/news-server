@@ -218,4 +218,21 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("bad request");
       });
   });
+
+  test("404 given a valid but empty article ID the endpoint will respond with an error", () => {
+    return request(app)
+      .get("/api/articles/555667/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("not found");
+      });
+  });
+  test("400 given an article ID which is not of the right structure the endpoint will respond with an error", () => {
+    return request(app)
+      .get("/api/articles/banana/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
 });
