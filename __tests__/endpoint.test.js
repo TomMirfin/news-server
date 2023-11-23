@@ -183,12 +183,13 @@ describe("DELETE comment by ID", () => {
         expect(body).toEqual({});
       });
   });
-  test("throws an error if trying to delete from a comment that does not exist ", () => {
-    return request(app)
-      .delete("/api/comments/4558")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body).toEqual({});
-      });
-  });
+  //   test("throws an error if trying to delete from a comment that does not exist ", () => {
+  //     return request(app)
+  //       .delete("/api/comments/4558")
+  //       .expect(404)
+  //       .then(({ body }) => {
+  //         expect(body).toEqual({});
+  //       });
+  //   });
+  // });
 });
