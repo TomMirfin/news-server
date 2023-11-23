@@ -16,19 +16,22 @@ const {
   handleServerErrors,
   handleSqlerror,
 } = require("./errors");
-const { getAllCommentsFromID } = require("./controller/comments.controller");
+const {
+  getAllCommentsFromID,
+  deleteCommentById,
+} = require("./controller/comments.controller");
 
 const app = express();
 
 app.use(express.json());
 
 app.get("/api/topics", getAllTopics);
-
 app.get("/api", getAllEndPoints);
-
 app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id", getArticlesById);
 app.get("/api/articles/:article_id/comments", getAllCommentsFromID);
+
+app.delete("/api/comments/:comment_id", deleteCommentById);
 
 app.all("*", handleNotFoundError);
 

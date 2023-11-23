@@ -174,3 +174,21 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 });
+describe("DELETE comment by ID", () => {
+  test("responds with an empty object if no content after a successful deletion", () => {
+    return request(app)
+      .delete("/api/comments/3")
+      .expect(204)
+      .then(({ body }) => {
+        expect(body).toEqual({});
+      });
+  });
+  test("throws an error if trying to delete from a comment that does not exist ", () => {
+    return request(app)
+      .delete("/api/comments/4558")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body).toEqual({});
+      });
+  });
+});
