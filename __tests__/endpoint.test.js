@@ -322,7 +322,7 @@ describe("PATCH: /api/articles/:article_id", () => {
       });
   });
   test("400: responds with an error when updating an article when a vote gets passed as a string", () => {
-    const newVote = { votes: "10" };
+    const newVote = { incVotes: "10" };
     return request(app)
       .patch("/api/articles/2")
       .send(newVote)

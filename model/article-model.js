@@ -24,13 +24,17 @@ exports.selectArticlesById = (article_id) => {
 };
 
 exports.patchArticle = (article_id, newVote) => {
-  const newVotes = Number(newVote.incVotes);
-  return db
-    .query(
-      "UPDATE articles SET votes = votes + $2 WHERE article_id = $1 RETURNING *;",
-      [article_id, newVotes]
-    )
-    .then(({ rows }) => {
-      return rows[0];
-    });
+  const newVotes = newVote.incVotes;
+  if (typeof newVotes === "number") {
+    return db
+      .query(
+        "UPDATE articles SET votes = votes + $2 WHERE article_id = $1 RETURNING *;",
+        [article_id, newVotes]
+      )
+      .then(({ rows }) => {
+        return rows[0];
+      });
+  } else {
+    return Promise.reject({ status: 400, msg: "bad request" });
+  }
 };
