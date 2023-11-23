@@ -19,6 +19,7 @@ const {
 } = require("./errors");
 const { getAllCommentsFromID } = require("./controller/comments.controller");
 const { postCommentByID } = require("./controller/comments.controller");
+const { getAllUsers } = require("./controller/users.controller");
 
 const app = express();
 app.use(express.json());
@@ -33,6 +34,8 @@ app.get("/api/articles/:article_id", getArticlesById);
 app.post("/api/articles/:article_id/comments", postCommentByID);
 
 app.get("/api/articles/:article_id/comments", getAllCommentsFromID);
+
+app.get("/api/users", getAllUsers);
 
 app.all("*", handleNotFoundError);
 app.use(handleSqlError);
