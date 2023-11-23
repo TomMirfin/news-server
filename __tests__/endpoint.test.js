@@ -37,7 +37,7 @@ describe("/api/topics", () => {
   test("status:400, responds with an error message when passed a bad path", () => {
     return request(app)
       .get("/api/nvnewbs")
-      .expect(404)
+      .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("bad request");
       });
@@ -75,7 +75,7 @@ describe("/api/articles/", () => {
   test("404: responds with AN error when there are no articles related to ID", () => {
     return request(app)
       .get("/api/articles/notANumber")
-      .expect(404)
+      .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("bad request");
       });
@@ -112,7 +112,7 @@ describe("/api/articles", () => {
   test("status:404, responds with an error message when passed a bad path", () => {
     return request(app)
       .get("/api/wrong-pathway")
-      .expect(404)
+      .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("bad request");
       });
@@ -196,15 +196,15 @@ describe("PATCH: /api/articles/:article_id", () => {
         });
       });
   });
-  test("status:404, responds with an error message when passed a bad path", () => {
+  test("404, responds with an error message when passed a bad path", () => {
     return request(app)
       .get("/api/wrong-pathway")
-      .expect(404)
+      .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("bad request");
       });
   });
-  test("404: responds with an error when there are no articles related to ID a valid id which inludes no articles", () => {
+  test("400: responds with an error when there are no articles related to ID a valid id which inludes no articles", () => {
     return request(app)
       .get("/api/articles/654445666")
       .expect(404)
@@ -212,10 +212,10 @@ describe("PATCH: /api/articles/:article_id", () => {
         expect(body.msg).toBe("not found");
       });
   });
-  test("404: responds with an error when the article Id is not of a valid structure", () => {
+  test("400: responds with an error when the article Id is not of a valid structure", () => {
     return request(app)
       .get("/api/articles/notANumber")
-      .expect(404)
+      .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("bad request");
       });
