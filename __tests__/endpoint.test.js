@@ -158,7 +158,7 @@ describe("PATCH: /api/articles/:article_id", () => {
     return request(app)
       .patch("/api/articles/1")
       .send(newVote)
-      .expect(200)
+      .expect(201)
       .then(({ body }) => {
         expect(body).toMatchObject({
           article_id: 1,
@@ -181,7 +181,7 @@ describe("PATCH: /api/articles/:article_id", () => {
     return request(app)
       .patch("/api/articles/1")
       .send(newVote)
-      .expect(200)
+      .expect(201)
       .then(({ body }) => {
         expect(body).toMatchObject({
           article_id: 1,

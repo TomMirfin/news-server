@@ -25,7 +25,9 @@ exports.patchArticleById = (req, res, next) => {
   const { article_id } = req.params;
   const newVote = req.body;
 
-  patchArticle(article_id, newVote).then((article) => {
-    res.status(200).send(article);
-  });
+  patchArticle(article_id, newVote)
+    .then((article) => {
+      res.status(201).send(article);
+    })
+    .catch(next);
 };
