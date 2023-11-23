@@ -37,9 +37,9 @@ app.patch("/api/articles/:article_id", patchArticleById);
 app.get("/api/articles/:article_id/comments", getAllCommentsFromID);
 
 app.all("*", handleNotFoundError);
-app.use(handleSqlError);
+
 app.use(handleCustomErrors);
-app.use(handleSqlerror);
+app.use(handleSqlError);
 app.use(handleServerErrors);
 
 module.exports = app;

@@ -11,9 +11,6 @@ exports.postCommentByID = (req, res, next) => {
     })
 
     .catch(next);
-
-    
-
 };
 const { selectArticlesById } = require("../model/article-model");
 const { selectComments } = require("../model/comments-model");
