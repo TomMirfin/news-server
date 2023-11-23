@@ -25,5 +25,21 @@
         }
       ]
     }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "posts a new comment on the given article ID",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 19,
+          "body": "Hello this is my new comment",
+          "article_id": 1,
+          "author": "rogersop",
+          "votes": 0,
+          "created_at": "2023-11-22T19:52:40.349Z"
+        }
+      ]
+    }
   }
 }

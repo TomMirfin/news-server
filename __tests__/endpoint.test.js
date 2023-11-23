@@ -84,11 +84,10 @@ describe("/api/articles/", () => {
 describe("/api/articles/:article_id/comments", () => {
   test("The endpoint will respond with an array of comments from the given article ID", () => {
     return request(app)
-      .get("/api/articles/9/comments")
+      .get("/api/articles/1/comments")
       .expect(200)
       .then(({ body }) => {
-        expect(body.length).toBe(2);
-        body.forEach((comment) => {
+        body.comments.forEach((comment) => {
           expect(typeof comment.comment_id).toBe("number");
           expect(typeof comment.votes).toBe("number");
           expect(typeof comment.created_at).toBe("string");
@@ -104,7 +103,7 @@ describe("/api/articles/:article_id/comments", () => {
       .get("/api/articles/9/comments")
       .expect(200)
       .then(({ body }) => {
-        expect(Array.isArray(body)).toBe(true);
+        expect(Array.isArray(body.comments)).toBe(true);
       });
   });
 
@@ -113,7 +112,7 @@ describe("/api/articles/:article_id/comments", () => {
       .get("/api/articles/555667/comments")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("no comments found");
+        expect(body.msg).toBe("not found");
       });
   });
   test("500 given an article ID which is not a number the endpoint will respond with an error", () => {
@@ -124,12 +123,51 @@ describe("/api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("Internal Server Error");
       });
   });
-  test("404 given a valid article ID which does not contain an error, return a no comments found error", () => {
+  test("200 given a valid article ID which does not contain an comment, return an empty array", () => {
     return request(app)
-      .get("/api/articles/10/comments")
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toEqual([]);
+      });
+  });
+});
+describe("/api/articles", () => {
+  test(`when all articles is requested, reponds with all articles in ascending order by creating date and no body`, () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(13);
+        expect(body).toBeSortedBy(body.created_at, {
+          descending: true,
+        });
+      });
+  });
+  test(`Each reply must respond with an object which includes author, title, article_id, topic, created_at, votes, article_img_url and comment count `, () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(13);
+        body.forEach((article) => {
+          expect(typeof article.author).toBe("string");
+          expect(typeof article.title).toBe("string");
+          expect(typeof article.article_id).toBe("number");
+          expect(typeof article.topic).toBe("string");
+          expect(typeof article.created_at).toBe("string");
+          expect(typeof article.votes).toBe("number");
+          expect(typeof article.article_img_url).toBe("string");
+          expect(typeof article.comment_count).toBe("string");
+        });
+      });
+  });
+  test("status:404, responds with an error message when passed a bad path", () => {
+    return request(app)
+      .get("/api/wrong-pathway")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("no comments found");
+        expect(body.msg).toBe("bad request");
       });
   });
 });
