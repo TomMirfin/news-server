@@ -43,7 +43,7 @@ describe("/api/topics", () => {
       });
   });
 });
-describe("/api/articles/", () => {
+describe("/api/articles/:articleID", () => {
   test("200: responds with articles related to ID", () => {
     return request(app)
       .get("/api/articles/1")
@@ -64,7 +64,7 @@ describe("/api/articles/", () => {
         ]);
       });
   });
-  test("404: responds with AN error when there are no articles related to ID", () => {
+  test("404: responds with AN error when there are no articles related to ID where the article Id does not exist ", () => {
     return request(app)
       .get("/api/articles/654445666")
       .expect(404)
@@ -72,10 +72,10 @@ describe("/api/articles/", () => {
         expect(body.msg).toBe("not found");
       });
   });
-  test("404: responds with AN error when there are no articles related to ID", () => {
+  test("404: responds with AN error when there are no articles related to ID and the structure of the request is incorrect", () => {
     return request(app)
       .get("/api/articles/notANumber")
-      .expect(404)
+      .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("bad request");
       });
@@ -159,7 +159,7 @@ describe("/api/articles/:article_id/comments", () => {
   test("404 given an article ID which is not of the right structure the endpoint will respond with an error", () => {
     return request(app)
       .get("/api/articles/banana/comments")
-      .expect(404)
+      .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("bad request");
       });
