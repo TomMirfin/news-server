@@ -43,7 +43,7 @@ describe("/api/topics", () => {
       });
   });
 });
-describe("/api/articles/", () => {
+describe("/api/articles/:articleID", () => {
   test("200: responds with articles related to ID", () => {
     return request(app)
       .get("/api/articles/1")
@@ -64,7 +64,7 @@ describe("/api/articles/", () => {
         ]);
       });
   });
-  test("404: responds with AN error when there are no articles related to ID", () => {
+  test("404: responds with AN error when there are no articles related to ID where the article Id does not exist ", () => {
     return request(app)
       .get("/api/articles/654445666")
       .expect(404)
@@ -72,23 +72,25 @@ describe("/api/articles/", () => {
         expect(body.msg).toBe("not found");
       });
   });
-  test("500: responds with AN error when there are no articles related to ID", () => {
+  test("404: responds with AN error when there are no articles related to ID and the structure of the request is incorrect", () => {
     return request(app)
       .get("/api/articles/notANumber")
-      .expect(500)
+      .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Internal Server Error");
+        expect(body.msg).toBe("bad request");
       });
   });
 });
 describe("/api/articles", () => {
-  test(`when all articles is requested, reponds with all articles in ascending order by creating date and no body`, () => {
+  test(`when all articles are requested, reponds with all articles in ascending order by creating date and no body`, () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
         expect(body.length).toBe(13);
-        expect(body).toBeSortedBy(body.created_at, { descending: true });
+        expect(body).toBeSortedBy(body.created_at, {
+          descending: true,
+        });
       });
   });
   test(`Each reply must respond with an object which includes author, title, article_id, topic, created_at, votes, article_img_url and comment count `, () => {
@@ -109,12 +111,66 @@ describe("/api/articles", () => {
         });
       });
   });
-  test("status:404, responds with an error message when passed a bad path", () => {
+  test("status:404, responds with an error message when passed a path that is not valid", () => {
     return request(app)
       .get("/api/wrong-pathway")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("bad request");
+      });
+  });
+});
+
+describe("/api/articles/:article_id/comments", () => {
+  test("The endpoint will respond with an array of comments from the given article ID", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments.length).toBe(11);
+        body.comments.forEach((comment) => {
+          expect(typeof comment.comment_id).toBe("number");
+          expect(typeof comment.votes).toBe("number");
+          expect(typeof comment.created_at).toBe("string");
+          expect(typeof comment.author).toBe("string");
+          expect(typeof comment.body).toBe("string");
+          expect(comment.article_id).toBe(1);
+        });
+      });
+  });
+
+  test("The endpoint will respond with array", () => {
+    return request(app)
+      .get("/api/articles/9/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(Array.isArray(body.comments)).toBe(true);
+      });
+  });
+
+  test("404 given a valid but empty article ID the endpoint will respond with an error", () => {
+    return request(app)
+      .get("/api/articles/555667/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("not found");
+      });
+  });
+  test("404 given an article ID which is not of the right structure the endpoint will respond with an error", () => {
+    return request(app)
+      .get("/api/articles/banana/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
+
+  test("200 given a valid article ID which does not contain an comment, return an empty array", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toEqual([]);
       });
   });
 });
