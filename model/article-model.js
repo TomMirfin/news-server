@@ -24,7 +24,6 @@ exports.selectArticlesById = (article_id) => {
 };
 
 exports.patchArticle = (article_id, newVote) => {
-  console.log(article_id, "<--- AID");
   const newVotes = Number(newVote.incVotes);
   return db
     .query(
@@ -32,7 +31,6 @@ exports.patchArticle = (article_id, newVote) => {
       [article_id, newVotes]
     )
     .then(({ rows }) => {
-      console.log(rows[0]);
       return rows[0];
     });
 };

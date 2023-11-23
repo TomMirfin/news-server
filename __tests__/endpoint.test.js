@@ -72,12 +72,12 @@ describe("/api/articles/", () => {
         expect(body.msg).toBe("not found");
       });
   });
-  test("500: responds with AN error when there are no articles related to ID", () => {
+  test("404: responds with AN error when there are no articles related to ID", () => {
     return request(app)
       .get("/api/articles/notANumber")
-      .expect(500)
+      .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Internal Server Error");
+        expect(body.msg).toBe("bad request");
       });
   });
 });
@@ -150,7 +150,7 @@ describe("/api/articles/:article_id/comments", () => {
   });
 });
 describe("PATCH: /api/articles/:article_id", () => {
-  test("the endpoint will successfully update the article on a given ID by updating the votes on that article ", () => {
+  test("the endpoint will successfully increment the article on a given ID by updating the votes on that article ", () => {
     const newVote = {
       incVotes: 10,
     };
@@ -160,7 +160,6 @@ describe("PATCH: /api/articles/:article_id", () => {
       .send(newVote)
       .expect(200)
       .then(({ body }) => {
-        console.log(body, "<--- body in test");
         expect(body).toMatchObject({
           article_id: 1,
           title: "Living in the shadow of a great man",
@@ -172,6 +171,53 @@ describe("PATCH: /api/articles/:article_id", () => {
           article_img_url:
             "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
         });
+      });
+  });
+  test("the endpoint will successfully decrement the article on a given ID by updating the votes on that article ", () => {
+    const newVote = {
+      incVotes: -100,
+    };
+
+    return request(app)
+      .patch("/api/articles/1")
+      .send(newVote)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toMatchObject({
+          article_id: 1,
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: "2020-07-09T20:11:00.000Z",
+          votes: 0,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+  test("status:404, responds with an error message when passed a bad path", () => {
+    return request(app)
+      .get("/api/wrong-pathway")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
+  test("404: responds with an error when there are no articles related to ID a valid id which inludes no articles", () => {
+    return request(app)
+      .get("/api/articles/654445666")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("not found");
+      });
+  });
+  test("404: responds with an error when the article Id is not of a valid structure", () => {
+    return request(app)
+      .get("/api/articles/notANumber")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
       });
   });
 });
