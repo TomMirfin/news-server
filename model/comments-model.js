@@ -14,7 +14,7 @@ exports.deleteComments = (comment_id) => {
     ])
     .then(({ rows }) => {
       if (!rows.length) {
-        Promise.reject({ status: "404", msg: "bad request" });
+        return Promise.reject({ status: "404", msg: "comment does not exist" });
       } else {
         return rows;
       }

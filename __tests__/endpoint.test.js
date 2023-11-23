@@ -191,13 +191,12 @@ describe("DELETE comment by ID", () => {
         expect(body.msg).toEqual("bad request");
       });
   });
-  //   test("404 reponse an error if trying to delete on path that that does not exist ", () => {
-  //     return request(app)
-  //       .delete("/api/comments/30")
-  //       .expect(204)
-  //       .then(({ body }) => {
-  //         expect(body).toEqual("no content");
-  //       });
-  //   });
-  // });
+  test("404 reponse an error if trying to delete on path that that does not exist ", () => {
+    return request(app)
+      .delete("/api/comments/30")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("comment does not exist");
+      });
+  });
 });
