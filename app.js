@@ -1,14 +1,14 @@
 const express = require("express");
 
 const {
-  getAllTopics,
-  getAllEndPoints,
-} = require("./controller/topics.controller");
-
-const {
   getAllArticles,
   getArticlesById,
 } = require("./controller/articles.controller");
+
+const {
+  getAllTopics,
+  getAllEndPoints,
+} = require("./controller/topics.controller");
 
 const {
   handleCustomErrors,
