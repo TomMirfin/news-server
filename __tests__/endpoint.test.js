@@ -183,12 +183,20 @@ describe("DELETE comment by ID", () => {
         expect(body).toEqual({});
       });
   });
-  //   test("throws an error if trying to delete from a comment that does not exist ", () => {
+  test("404 reponse an error if trying to delete on path that that does not exist ", () => {
+    return request(app)
+      .delete("/api/not-a-comment/3")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("bad request");
+      });
+  });
+  //   test("404 reponse an error if trying to delete on path that that does not exist ", () => {
   //     return request(app)
-  //       .delete("/api/comments/4558")
-  //       .expect(404)
+  //       .delete("/api/comments/30")
+  //       .expect(204)
   //       .then(({ body }) => {
-  //         expect(body).toEqual({});
+  //         expect(body).toEqual("no content");
   //       });
   //   });
   // });

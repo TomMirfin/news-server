@@ -9,8 +9,14 @@ exports.selectComments = (article_id) => {
 };
 exports.deleteComments = (comment_id) => {
   return db
-    .query("DELETE FROM comments WHERE comment_id = $1 ;", [comment_id])
+    .query("DELETE FROM comments WHERE comment_id = $1 RETURNING *;", [
+      comment_id,
+    ])
     .then(({ rows }) => {
-      return rows;
+      if (!rows.length) {
+        Promise.reject({ status: "404", msg: "bad request" });
+      } else {
+        return rows;
+      }
     });
 };

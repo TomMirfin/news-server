@@ -18,9 +18,10 @@ exports.deleteCommentById = (req, res, next) => {
 
   deleteComments(comment_id)
     .then((comments) => {
-      if (!comments.length) {
-        res.status(204).send({});
-      }
+      res.status(204).send({ comments });
     })
-    .catch(next);
+    .catch((err) => {
+      console.log(err);
+      return err;
+    });
 };
