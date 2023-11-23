@@ -1,4 +1,5 @@
 const db = require("../db/connection.js");
+const { articleData } = require("../db/data/test-data/index.js");
 
 exports.selectAllArticles = () => {
   return db
@@ -22,10 +23,16 @@ exports.selectArticlesById = (article_id) => {
     });
 };
 
-exports.patchArticle = (article, newVote) => {
-  const article_id = article[0].article_id;
-  console.log(article_id);
-  return db.query("ALTER article WHERE article");
-  console.log(article);
-  console.log(newVote, "<--- in model");
+exports.patchArticle = (article_id, newVote) => {
+  console.log(article_id, "<--- AID");
+  const newVotes = Number(newVote.incVotes);
+  return db
+    .query(
+      "UPDATE articles SET votes = votes + $2 WHERE article_id = $1 RETURNING *;",
+      [article_id, newVotes]
+    )
+    .then((rows) => {
+      console.log(rows.rows[0]);
+      return rows[0];
+    });
 };
