@@ -21,3 +21,11 @@ exports.selectArticlesById = (article_id) => {
       }
     });
 };
+
+exports.patchArticle = (article, newVote) => {
+  const article_id = article[0].article_id;
+  console.log(article_id);
+  return db.query("ALTER article WHERE article");
+  console.log(article);
+  console.log(newVote, "<--- in model");
+};
