@@ -72,12 +72,12 @@ describe("/api/articles/", () => {
         expect(body.msg).toBe("not found");
       });
   });
-  test("500: responds with AN error when there are no articles related to ID", () => {
+  test("404: responds with AN error when there are no articles related to ID", () => {
     return request(app)
       .get("/api/articles/notANumber")
-      .expect(500)
+      .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Internal Server Error");
+        expect(body.msg).toBe("bad request");
       });
   });
 });
@@ -134,7 +134,7 @@ describe("/api/articles/:article_id/comments", () => {
           expect(typeof comment.created_at).toBe("string");
           expect(typeof comment.author).toBe("string");
           expect(typeof comment.body).toBe("string");
-          expect(typeof comment.article_id).toBe("number");
+          expect(comment.article_id).toBe(1);
         });
       });
   });
@@ -148,12 +148,20 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 
-  test("404 given a bad article ID the endpoint will respond with an error", () => {
+  test("404 given a valid but empty article ID the endpoint will respond with an error", () => {
     return request(app)
       .get("/api/articles/555667/comments")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("not found");
+      });
+  });
+  test("404 given an article ID which is not of the right structure the endpoint will respond with an error", () => {
+    return request(app)
+      .get("/api/articles/banana/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
       });
   });
 
