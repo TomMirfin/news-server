@@ -31,8 +31,8 @@ exports.patchArticle = (article_id, newVote) => {
       "UPDATE articles SET votes = votes + $2 WHERE article_id = $1 RETURNING *;",
       [article_id, newVotes]
     )
-    .then((rows) => {
-      console.log(rows.rows[0]);
+    .then(({ rows }) => {
+      console.log(rows[0]);
       return rows[0];
     });
 };
