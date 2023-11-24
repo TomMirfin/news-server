@@ -40,7 +40,7 @@ describe("/api/topics", () => {
       .get("/api/nvnewbs")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("bad request");
+        expect(body.msg).toBe("not found");
       });
   });
 });
@@ -118,7 +118,7 @@ describe("/api/articles", () => {
       .get("/api/wrong-pathway")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("bad request");
+        expect(body.msg).toBe("not found");
       });
   });
 });
@@ -239,6 +239,57 @@ describe("get all /api/users", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("bad request");
+      });
+  });
+});
+describe("query topic", () => {
+  test("returns array of articles filtered by topic when passed valid topic query  ", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toHaveLength(12);
+        expect(body[0].topic).toBe("mitch");
+      });
+  });
+  test("returns array of articles filtered by topic when passed valid topic query type check  ", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toHaveLength(12);
+        body.forEach((topic) => {
+          expect(typeof topic.author).toBe("string");
+          expect(typeof topic.body).toBe("string");
+          expect(typeof topic.title).toBe("string");
+          expect(typeof topic.article_img_url).toBe("string");
+          expect(typeof topic.body).toBe("string");
+          expect(typeof topic.article_id).toBe("number");
+        });
+      });
+  });
+  test("404 when given a query that does not exist, respond with a not found error", () => {
+    return request(app)
+      .get("/api/articles?topic=socks")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("not found");
+      });
+  });
+  test("404 when given a a path with no topics, respond with a not found error", () => {
+    return request(app)
+      .get("/api/comments?topics=")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("not found");
+      });
+  });
+  test("404 when given a a path with a comment with no topic, respond with a not found error", () => {
+    return request(app)
+      .get("/api/comments?topics=paper")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("not found");
       });
   });
 });
