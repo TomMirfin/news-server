@@ -1,9 +1,11 @@
+const { articleData } = require("../db/data/test-data");
 const { selectAllArticles } = require("../model/article-model");
 const { selectArticlesById } = require("../model/article-model");
 
 exports.getAllArticles = (req, res, next) => {
-  const query = req.query;
-  selectAllArticles(query)
+  const { topic } = req.query;
+
+  selectAllArticles(topic)
     .then((articles) => {
       res.status(200).send(articles);
     })
