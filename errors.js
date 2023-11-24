@@ -20,7 +20,7 @@ exports.handleSqlError = (err, req, res, next) => {
   }
 };
 exports.handleNotFoundError = (req, res) => {
-  res.status(404).send({ msg: "bad request" });
+  res.status(404).send({ msg: "not found" });
 };
 
 exports.handleServerErrors = (err, req, res, next) => {

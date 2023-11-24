@@ -39,7 +39,7 @@ describe("/api/topics", () => {
       .get("/api/nvnewbs")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("bad request");
+        expect(body.msg).toBe("not found");
       });
   });
 });
@@ -116,7 +116,7 @@ describe("/api/articles", () => {
       .get("/api/wrong-pathway")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("bad request");
+        expect(body.msg).toBe("not found");
       });
   });
 });
@@ -237,13 +237,48 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
-// describe("query for GET /api/articles/:article_id (comment_count)", () => {
-//   test("The query will respons with a topic which includes the comment count", () => {
-//     return request(app)
-//       .get("/api/articles/1?include=comment_count")
-//       .expect(200)
-//       .then(({ body }) => {
-//         expect(body).toBe("");
-//       });
-//   });
-// });
+describe("query for GET /api/articles/:article_id (comment_count)", () => {
+  test("The query will respons with a topic which includes the comment count", () => {
+    return request(app)
+      .get("/api/articles/2?include=comment_count")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toHaveLength(1);
+        body.forEach((article) => {
+          expect(article.article_id).toBe(2);
+          expect(typeof article.article_img_url).toBe("string");
+          expect(typeof article.author).toBe("string");
+          expect(typeof article.body).toBe("string");
+          expect(typeof article.comment_count).toBe("string");
+          expect(typeof article.created_at).toBe("string");
+          expect(typeof article.title).toBe("string");
+          expect(typeof article.topic).toBe("string");
+          expect(typeof article.votes).toBe("number");
+        });
+      });
+  });
+  test("400 responds with an error if the article does not exist", () => {
+    return request(app)
+      .get("/api/articles/19?include=comment_count")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
+  test("400 responds with an error if the query is incorrect", () => {
+    return request(app)
+      .get("/api/articles/2?include=comment_notcount")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
+  test("404 responds with an error if the pathway is incorrect", () => {
+    return request(app)
+      .get("/api/comments/2?include=comment_notcount")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("not found");
+      });
+  });
+});
