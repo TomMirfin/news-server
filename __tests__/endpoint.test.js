@@ -237,7 +237,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
-describe("sort query topic", () => {
+describe("query topic", () => {
   test("when given a query of topic mitch, respond with that topic ", () => {
     return request(app)
       .get("/api/articles?topic=mitch")
