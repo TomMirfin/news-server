@@ -14,7 +14,7 @@ const {
   handleCustomErrors,
   handleNotFoundError,
   handleServerErrors,
-  handleSqlerror,
+
   handleSqlError,
 } = require("./errors");
 const { getAllCommentsFromID } = require("./controller/comments.controller");
@@ -38,9 +38,9 @@ app.get("/api/articles/:article_id/comments", getAllCommentsFromID);
 app.get("/api/users", getAllUsers);
 
 app.all("*", handleNotFoundError);
-app.use(handleSqlError);
+
 app.use(handleCustomErrors);
-app.use(handleSqlerror);
+app.use(handleSqlError);
 app.use(handleServerErrors);
 
 module.exports = app;

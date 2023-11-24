@@ -262,7 +262,51 @@ describe("get all /api/users", () => {
   });
   test("status:400, responds with an error message when passed a bad path", () => {
     return request(app)
-      .get("/api/nvnewbs")
+      .get("/api/notusers")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
+});
+describe("sort query topic", () => {
+  test("when given a query of topic mitch, respond with that topic ", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.rows).toHaveLength(12);
+        expect(body.rows[0].topic).toBe("mitch");
+      });
+  });
+  test("when given a query of topic cats, respond with that topic ", () => {
+    return request(app)
+      .get("/api/articles?topic=cats")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.rows).toHaveLength(1);
+        expect(body.rows[0].topic).toBe("cats");
+      });
+  });
+  test("404 when given a query that does not exist, respond with a bad request", () => {
+    return request(app)
+      .get("/api/articles?topic=socks")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("not found");
+      });
+  });
+  // test("404 when given a query column that does not exist, respond with a bad request", () => {
+  //   return request(app)
+  //     .get("/api/articles?notatopic=cats")
+  //     .expect(404)
+  //     .then(({ body }) => {
+  //       expect(body.msg).toBe("bad request");
+  //     });
+  // });
+  test("404 when given a path that does not exist, respond with a bad request", () => {
+    return request(app)
+      .get("/api/comments?topics=cats")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("bad request");

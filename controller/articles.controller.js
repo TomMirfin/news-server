@@ -2,7 +2,9 @@ const { selectAllArticles } = require("../model/article-model");
 const { selectArticlesById } = require("../model/article-model");
 
 exports.getAllArticles = (req, res, next) => {
-  selectAllArticles()
+  const query = req.query;
+
+  selectAllArticles(query)
     .then((articles) => {
       res.status(200).send(articles);
     })
@@ -16,6 +18,5 @@ exports.getArticlesById = (req, res, next) => {
     .then((articles) => {
       res.status(200).send(articles);
     })
-
     .catch(next);
 };
