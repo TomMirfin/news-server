@@ -300,12 +300,16 @@ describe("PATCH: /api/articles/:article_id", () => {
       });
   });
 
-  test("400: responds with an error when there are no articles related to ID a valid id which inludes no articles", () => {
+  test("404: responds with an error when there are no articles related to ID a valid id which inludes no articles", () => {
+    const newVote = {
+      incVotes: 10,
+    };
     return request(app)
       .patch("/api/articles/654445666")
-      .expect(400)
+      .send(newVote)
+      .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("bad request");
+        expect(body.msg).toBe("not found");
       });
   });
 
