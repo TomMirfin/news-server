@@ -3,6 +3,7 @@ const request = require("supertest");
 const testData = require("../db/data/test-data");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
+const users = require("../db/data/test-data/users");
 
 afterAll(() => {
   return db.end();
@@ -207,6 +208,37 @@ describe("DELETE comment by ID", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toEqual("comment does not exist");
+      });
+  });
+});
+describe("get all /api/users", () => {
+  test("Then endpoint will respond with an array of user objects with types checked", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(4);
+        body.forEach((user) => {
+          expect(typeof user.username).toBe("string");
+          expect(typeof user.name).toBe("string");
+          expect(typeof user.avatar_url).toBe("string");
+        });
+      });
+  });
+  test("Then endpoint will respond with an array of user objects which will match the test user data", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toMatchObject(users);
+      });
+  });
+  test("status:400, responds with an error message when passed a bad path", () => {
+    return request(app)
+      .get("/api/notusers")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
       });
   });
 });

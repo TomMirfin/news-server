@@ -15,7 +15,7 @@ const {
   handleCustomErrors,
   handleNotFoundError,
   handleServerErrors,
-  handleSqlerror,
+
   handleSqlError,
 } = require("./errors");
 
@@ -25,6 +25,7 @@ const {
 
 const { getAllCommentsFromID } = require("./controller/comments.controller");
 const { postCommentByID } = require("./controller/comments.controller");
+const { getAllUsers } = require("./controller/users.controller");
 
 
 const app = express();
@@ -40,7 +41,11 @@ app.patch("/api/articles/:article_id", patchArticleById);
 
 app.get("/api/articles/:article_id/comments", getAllCommentsFromID);
 
+
+app.get("/api/users", getAllUsers);
+
 app.delete("/api/comments/:comment_id", deleteCommentById);
+
 
 app.all("*", handleNotFoundError);
 
