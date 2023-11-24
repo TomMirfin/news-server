@@ -72,6 +72,7 @@ describe("/api/articles/:articleID", () => {
         expect(body.msg).toBe("not found");
       });
   });
+
   test("404: responds with AN error when there are no articles related to ID and the structure of the request is incorrect", () => {
     return request(app)
       .get("/api/articles/notANumber")
@@ -156,7 +157,7 @@ describe("/api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("not found");
       });
   });
-  test("404 given an article ID which is not of the right structure the endpoint will respond with an error", () => {
+  test("400 given an article ID which is not of the right structure the endpoint will respond with an error", () => {
     return request(app)
       .get("/api/articles/banana/comments")
       .expect(400)
@@ -174,6 +175,7 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 });
+
 describe("DELETE comment by ID", () => {
   test("responds with an empty object if no content after a successful deletion", () => {
     return request(app)
