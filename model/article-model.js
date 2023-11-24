@@ -1,4 +1,5 @@
 const db = require("../db/connection.js");
+const { articleData } = require("../db/data/test-data/index.js");
 
 exports.selectAllArticles = (query) => {
   let queryString = "SELECT * FROM articles ";
@@ -35,4 +36,24 @@ exports.selectArticlesById = (article_id) => {
         return rows;
       }
     });
+};
+
+exports.patchArticle = (article_id, newVote) => {
+  const newVotes = newVote.incVotes;
+  if (typeof newVotes === "number") {
+    return db
+      .query(
+        "UPDATE articles SET votes = votes + $2 WHERE article_id = $1 RETURNING *;",
+        [article_id, newVotes]
+      )
+      .then(({ rows }) => {
+        if (!rows.length) {
+          return Promise.reject({ status: 404, msg: "not found" });
+        } else {
+          return rows[0];
+        }
+      });
+  } else {
+    return Promise.reject({ status: 400, msg: "bad request" });
+  }
 };

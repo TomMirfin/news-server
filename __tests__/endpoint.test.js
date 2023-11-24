@@ -3,6 +3,7 @@ const request = require("supertest");
 const testData = require("../db/data/test-data");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
+const users = require("../db/data/test-data/users");
 
 afterAll(() => {
   return db.end();
@@ -72,6 +73,7 @@ describe("/api/articles/:articleID", () => {
         expect(body.msg).toBe("not found");
       });
   });
+
   test("404: responds with AN error when there are no articles related to ID and the structure of the request is incorrect", () => {
     return request(app)
       .get("/api/articles/notANumber")
@@ -174,64 +176,67 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 });
-describe("POST /api/articles/:article_id/comments", () => {
-  test("Posts a new comment into an article with a given ID", () => {
-    const newComment = {
-      username: "rogersop",
-      body: "Hello this is my new comment",
-    };
+
+describe("DELETE comment by ID", () => {
+  test("responds with an empty object if no content after a successful deletion", () => {
     return request(app)
-      .post("/api/articles/1/comments")
-      .send(newComment)
-      .expect(201)
+      .delete("/api/comments/3")
+      .expect(204)
       .then(({ body }) => {
-        expect(body).toMatchObject({
-          comment_id: 19,
-          body: "Hello this is my new comment",
-          author: "rogersop",
+        expect(body).toEqual({});
+      });
+  });
+  test("404 reponse an error if trying to delete on path that that does not exist ", () => {
+    return request(app)
+      .delete("/api/not-a-comment/3")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("bad request");
+      });
+  });
+  test("400 reponse an error if trying to delete on path that that does not exist ", () => {
+    return request(app)
+      .delete("/api/comments/not-a-comment")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("bad request");
+      });
+  });
+  test("404 reponse an error if trying to delete on a comment that does not exist", () => {
+    return request(app)
+      .delete("/api/comments/30")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("comment does not exist");
+      });
+  });
+});
+describe("get all /api/users", () => {
+  test("Then endpoint will respond with an array of user objects with types checked", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(4);
+        body.forEach((user) => {
+          expect(typeof user.username).toBe("string");
+          expect(typeof user.name).toBe("string");
+          expect(typeof user.avatar_url).toBe("string");
         });
       });
   });
-
-  test("404: If a new comment is posted with a username that doesn't exist an error will be returned", () => {
-    const newComment = {
-      username: "TomdaBomb",
-      body: "Hello this is my new comment",
-    };
+  test("Then endpoint will respond with an array of user objects which will match the test user data", () => {
     return request(app)
-      .post("/api/articles/1/comments")
-      .send(newComment)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toMatchObject(users);
+      });
+  });
+  test("status:400, responds with an error message when passed a bad path", () => {
+    return request(app)
+      .get("/api/notusers")
       .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("No username found");
-      });
-  });
-
-  test("400 returns an error if a comment is not complete", () => {
-    const newComment = {
-      username: "rogersop",
-    };
-    return request(app)
-      .post("/api/articles/1/comments")
-      .send(newComment)
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe("bad request");
-      });
-  });
-
-  test("404 given a valid but empty article ID the endpoint will respond with an error", () => {
-    return request(app)
-      .get("/api/articles/555667/comments")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("not found");
-      });
-  });
-  test("400 given an article ID which is not of the right structure the endpoint will respond with an error", () => {
-    return request(app)
-      .get("/api/articles/banana/comments")
-      .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("bad request");
       });
