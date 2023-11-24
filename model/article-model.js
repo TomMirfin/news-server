@@ -9,14 +9,12 @@ exports.selectAllArticles = (query) => {
     return db
       .query("SELECT * FROM articles WHERE topic = $1 ", [newQuery])
       .then((topic) => {
-        console.log(topic[0]);
         return topic;
       });
   } else if (newQuery === "cats" && queryType.includes("topic")) {
     return db
       .query("SELECT * FROM articles WHERE topic = $1 ", [newQuery])
       .then((topic) => {
-        console.log(topic[0]);
         return topic;
       });
   } else if (!newQuery) {
