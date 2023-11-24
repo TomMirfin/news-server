@@ -1,4 +1,3 @@
-const { articleData } = require("../db/data/test-data");
 const { selectAllArticles } = require("../model/article-model");
 const { selectArticlesById } = require("../model/article-model");
 
