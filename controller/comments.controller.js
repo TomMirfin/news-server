@@ -9,9 +9,8 @@ exports.postCommentByID = (req, res, next) => {
     .then((comment) => {
       res.status(201).send(comment);
     })
-    .catch((err) => {
-      next(err);
-    });
+
+    .catch(next);
 };
 const { selectArticlesById } = require("../model/article-model");
 const { selectComments } = require("../model/comments-model");

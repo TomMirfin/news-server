@@ -3,6 +3,7 @@ const express = require("express");
 const {
   getAllArticles,
   getArticlesById,
+  patchArticleById,
 } = require("./controller/articles.controller");
 
 const {
@@ -31,13 +32,14 @@ app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id", getArticlesById);
 
 app.post("/api/articles/:article_id/comments", postCommentByID);
+app.patch("/api/articles/:article_id", patchArticleById);
 
 app.get("/api/articles/:article_id/comments", getAllCommentsFromID);
 
 app.all("*", handleNotFoundError);
-app.use(handleSqlError);
+
 app.use(handleCustomErrors);
-app.use(handleSqlerror);
+app.use(handleSqlError);
 app.use(handleServerErrors);
 
 module.exports = app;

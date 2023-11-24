@@ -72,6 +72,7 @@ describe("/api/articles/:articleID", () => {
         expect(body.msg).toBe("not found");
       });
   });
+
   test("404: responds with AN error when there are no articles related to ID and the structure of the request is incorrect", () => {
     return request(app)
       .get("/api/articles/notANumber")
@@ -231,6 +232,104 @@ describe("POST /api/articles/:article_id/comments", () => {
   test("400 given an article ID which is not of the right structure the endpoint will respond with an error", () => {
     return request(app)
       .get("/api/articles/banana/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
+});
+
+describe("PATCH: /api/articles/:article_id", () => {
+  test("the endpoint will successfully increment the article on a given ID by updating the votes on that article ", () => {
+    const newVote = {
+      incVotes: 10,
+    };
+
+    return request(app)
+      .patch("/api/articles/1")
+      .send(newVote)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toMatchObject({
+          article_id: 1,
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: "2020-07-09T20:11:00.000Z",
+          votes: 110,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+  test("the endpoint will successfully decrement the article on a given ID by updating the votes on that article ", () => {
+    const newVote = {
+      incVotes: -100,
+    };
+
+    return request(app)
+      .patch("/api/articles/1")
+      .send(newVote)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toMatchObject({
+          article_id: 1,
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: "2020-07-09T20:11:00.000Z",
+          votes: 0,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+
+  test("400, responds with an error message when passed a bad path", () => {
+    const newVote = {
+      incVotes: 10,
+    };
+    return request(app)
+      .patch("/api/wrong-pathway")
+      .send(newVote)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
+
+  test("404: responds with an error when there are no articles related to ID a valid id which inludes no articles", () => {
+    const newVote = {
+      incVotes: 10,
+    };
+    return request(app)
+      .patch("/api/articles/654445666")
+      .send(newVote)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("not found");
+      });
+  });
+
+  test("400: responds with an error when the article Id is not of a valid structure", () => {
+    const newVote = {
+      incVotes: 10,
+    };
+    return request(app)
+      .patch("/api/articles/notANumber")
+      .send(newVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
+  test("400: responds with an error when updating an article when a vote gets passed as a string", () => {
+    const newVote = { incVotes: "10" };
+    return request(app)
+      .patch("/api/articles/2")
+      .send(newVote)
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("bad request");
