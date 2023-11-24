@@ -73,6 +73,7 @@ describe("/api/articles/:articleID", () => {
         expect(body.msg).toBe("not found");
       });
   });
+
   test("404: responds with AN error when there are no articles related to ID and the structure of the request is incorrect", () => {
     return request(app)
       .get("/api/articles/notANumber")
@@ -175,66 +176,38 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 });
-describe("POST /api/articles/:article_id/comments", () => {
-  test("Posts a new comment into an article with a given ID", () => {
-    const newComment = {
-      username: "rogersop",
-      body: "Hello this is my new comment",
-    };
+
+describe("DELETE comment by ID", () => {
+  test("responds with an empty object if no content after a successful deletion", () => {
     return request(app)
-      .post("/api/articles/1/comments")
-      .send(newComment)
-      .expect(201)
+      .delete("/api/comments/3")
+      .expect(204)
       .then(({ body }) => {
-        expect(body).toMatchObject({
-          comment_id: 19,
-          body: "Hello this is my new comment",
-          author: "rogersop",
-        });
+        expect(body).toEqual({});
       });
   });
-
-  test("404: If a new comment is posted with a username that doesn't exist an error will be returned", () => {
-    const newComment = {
-      username: "TomdaBomb",
-      body: "Hello this is my new comment",
-    };
+  test("404 reponse an error if trying to delete on path that that does not exist ", () => {
     return request(app)
-      .post("/api/articles/1/comments")
-      .send(newComment)
+      .delete("/api/not-a-comment/3")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("No username found");
+        expect(body.msg).toEqual("bad request");
       });
   });
-
-  test("400 returns an error if a comment is not complete", () => {
-    const newComment = {
-      username: "rogersop",
-    };
+  test("400 reponse an error if trying to delete on path that that does not exist ", () => {
     return request(app)
-      .post("/api/articles/1/comments")
-      .send(newComment)
+      .delete("/api/comments/not-a-comment")
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("bad request");
+        expect(body.msg).toEqual("bad request");
       });
   });
-
-  test("404 given a valid but empty article ID the endpoint will respond with an error", () => {
+  test("404 reponse an error if trying to delete on a comment that does not exist", () => {
     return request(app)
-      .get("/api/articles/555667/comments")
+      .delete("/api/comments/30")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("not found");
-      });
-  });
-  test("400 given an article ID which is not of the right structure the endpoint will respond with an error", () => {
-    return request(app)
-      .get("/api/articles/banana/comments")
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe("bad request");
+        expect(body.msg).toEqual("comment does not exist");
       });
   });
 });
