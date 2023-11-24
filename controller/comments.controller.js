@@ -13,7 +13,7 @@ exports.postCommentByID = (req, res, next) => {
     .catch(next);
 };
 const { selectArticlesById } = require("../model/article-model");
-const { selectComments } = require("../model/comments-model");
+const { selectComments, deleteComments } = require("../model/comments-model");
 
 exports.getAllCommentsFromID = (req, res, next) => {
   const { article_id } = req.params;
@@ -24,6 +24,15 @@ exports.getAllCommentsFromID = (req, res, next) => {
     .then((resolvedPromises) => {
       const comments = resolvedPromises[0];
       res.status(200).send({ comments });
+    })
+    .catch(next);
+};
+exports.deleteCommentById = (req, res, next) => {
+  const { comment_id } = req.params;
+
+  deleteComments(comment_id)
+    .then((comments) => {
+      res.status(204).send();
     })
     .catch(next);
 };

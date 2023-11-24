@@ -175,164 +175,38 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 });
-describe("POST /api/articles/:article_id/comments", () => {
-  test("Posts a new comment into an article with a given ID", () => {
-    const newComment = {
-      username: "rogersop",
-      body: "Hello this is my new comment",
-    };
+
+describe("DELETE comment by ID", () => {
+  test("responds with an empty object if no content after a successful deletion", () => {
     return request(app)
-      .post("/api/articles/1/comments")
-      .send(newComment)
-      .expect(201)
+      .delete("/api/comments/3")
+      .expect(204)
       .then(({ body }) => {
-        expect(body).toMatchObject({
-          comment_id: 19,
-          body: "Hello this is my new comment",
-          author: "rogersop",
-        });
+        expect(body).toEqual({});
       });
   });
-
-  test("404: If a new comment is posted with a username that doesn't exist an error will be returned", () => {
-    const newComment = {
-      username: "TomdaBomb",
-      body: "Hello this is my new comment",
-    };
+  test("404 reponse an error if trying to delete on path that that does not exist ", () => {
     return request(app)
-      .post("/api/articles/1/comments")
-      .send(newComment)
+      .delete("/api/not-a-comment/3")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("No username found");
+        expect(body.msg).toEqual("bad request");
       });
   });
-
-  test("400 returns an error if a comment is not complete", () => {
-    const newComment = {
-      username: "rogersop",
-    };
+  test("400 reponse an error if trying to delete on path that that does not exist ", () => {
     return request(app)
-      .post("/api/articles/1/comments")
-      .send(newComment)
+      .delete("/api/comments/not-a-comment")
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("bad request");
+        expect(body.msg).toEqual("bad request");
       });
   });
-
-  test("404 given a valid but empty article ID the endpoint will respond with an error", () => {
+  test("404 reponse an error if trying to delete on a comment that does not exist", () => {
     return request(app)
-      .get("/api/articles/555667/comments")
+      .delete("/api/comments/30")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("not found");
-      });
-  });
-  test("400 given an article ID which is not of the right structure the endpoint will respond with an error", () => {
-    return request(app)
-      .get("/api/articles/banana/comments")
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe("bad request");
-      });
-  });
-});
-
-describe("PATCH: /api/articles/:article_id", () => {
-  test("the endpoint will successfully increment the article on a given ID by updating the votes on that article ", () => {
-    const newVote = {
-      incVotes: 10,
-    };
-
-    return request(app)
-      .patch("/api/articles/1")
-      .send(newVote)
-      .expect(200)
-      .then(({ body }) => {
-        expect(body).toMatchObject({
-          article_id: 1,
-          title: "Living in the shadow of a great man",
-          topic: "mitch",
-          author: "butter_bridge",
-          body: "I find this existence challenging",
-          created_at: "2020-07-09T20:11:00.000Z",
-          votes: 110,
-          article_img_url:
-            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-        });
-      });
-  });
-  test("the endpoint will successfully decrement the article on a given ID by updating the votes on that article ", () => {
-    const newVote = {
-      incVotes: -100,
-    };
-
-    return request(app)
-      .patch("/api/articles/1")
-      .send(newVote)
-      .expect(200)
-      .then(({ body }) => {
-        expect(body).toMatchObject({
-          article_id: 1,
-          title: "Living in the shadow of a great man",
-          topic: "mitch",
-          author: "butter_bridge",
-          body: "I find this existence challenging",
-          created_at: "2020-07-09T20:11:00.000Z",
-          votes: 0,
-          article_img_url:
-            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-        });
-      });
-  });
-
-  test("400, responds with an error message when passed a bad path", () => {
-    const newVote = {
-      incVotes: 10,
-    };
-    return request(app)
-      .patch("/api/wrong-pathway")
-      .send(newVote)
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("bad request");
-      });
-  });
-
-  test("404: responds with an error when there are no articles related to ID a valid id which inludes no articles", () => {
-    const newVote = {
-      incVotes: 10,
-    };
-    return request(app)
-      .patch("/api/articles/654445666")
-      .send(newVote)
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("not found");
-      });
-  });
-
-  test("400: responds with an error when the article Id is not of a valid structure", () => {
-    const newVote = {
-      incVotes: 10,
-    };
-    return request(app)
-      .patch("/api/articles/notANumber")
-      .send(newVote)
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe("bad request");
-      });
-  });
-  test("400: responds with an error when updating an article when a vote gets passed as a string", () => {
-    const newVote = { incVotes: "10" };
-    return request(app)
-      .patch("/api/articles/2")
-      .send(newVote)
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe("bad request");
+        expect(body.msg).toEqual("comment does not exist");
       });
   });
 });

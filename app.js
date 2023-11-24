@@ -18,16 +18,20 @@ const {
   handleSqlerror,
   handleSqlError,
 } = require("./errors");
+
+const {
+  deleteCommentById,
+} = require("./controller/comments.controller");
+
 const { getAllCommentsFromID } = require("./controller/comments.controller");
 const { postCommentByID } = require("./controller/comments.controller");
+
 
 const app = express();
 app.use(express.json());
 
 app.get("/api/topics", getAllTopics);
-
 app.get("/api", getAllEndPoints);
-
 app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id", getArticlesById);
 
@@ -35,6 +39,8 @@ app.post("/api/articles/:article_id/comments", postCommentByID);
 app.patch("/api/articles/:article_id", patchArticleById);
 
 app.get("/api/articles/:article_id/comments", getAllCommentsFromID);
+
+app.delete("/api/comments/:comment_id", deleteCommentById);
 
 app.all("*", handleNotFoundError);
 
