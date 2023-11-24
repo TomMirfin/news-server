@@ -264,14 +264,6 @@ describe("sort query topic", () => {
         expect(body.msg).toBe("not found");
       });
   });
-  // test("404 when given a query to a number that does not exist, respond with a bad request", () => {
-  //   return request(app)
-  //     .get("/api/articles?topics=111223344")
-  //     .expect(404)
-  //     .then(({ body }) => {
-  //       expect(body.msg).toBe("bad request");
-  //     });
-  // });
   test("404 when given a path that does not exist such as comments, respond with a bad request", () => {
     return request(app)
       .get("/api/comments?topics=cats")
