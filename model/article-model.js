@@ -3,7 +3,6 @@ const db = require("../db/connection.js");
 exports.selectAllArticles = (query) => {
   const newQuery = query.topic;
   const queryObj = Object.keys(query);
-  console.log(typeof newQuery, "<---typeof");
   if (newQuery === "mitch" && queryObj[0] === "topic") {
     return db
       .query("SELECT * FROM articles WHERE topic = $1 ", [newQuery])
