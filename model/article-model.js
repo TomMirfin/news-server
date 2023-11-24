@@ -3,17 +3,23 @@ const db = require("../db/connection.js");
 exports.selectAllArticles = (query) => {
   const newQuery = query.topic;
   const queryObj = Object.keys(query);
-
+  console.log(typeof newQuery, "<---typeof");
   if (newQuery === "mitch" && queryObj[0] === "topic") {
     return db
       .query("SELECT * FROM articles WHERE topic = $1 ", [newQuery])
       .then((topic) => {
+        if (!topic) {
+          return Promise.reject({ status: 404, msg: "not found" });
+        }
         return topic;
       });
   } else if (newQuery === "cats" && queryObj[0] === "topic") {
     return db
       .query("SELECT * FROM articles WHERE topic = $1 ", [newQuery])
       .then((topic) => {
+        if (!topic) {
+          return Promise.reject({ status: 404, msg: "not found" });
+        }
         return topic;
       });
   } else if (!newQuery && queryObj[0] !== "topic") {
@@ -22,7 +28,11 @@ exports.selectAllArticles = (query) => {
         "SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.author) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id GROUP BY articles.author,  articles.title,  articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url ORDER BY created_at DESC;"
       )
       .then(({ rows }) => {
-        return rows;
+        if (!rows) {
+          return Promise.reject({ status: 404, msg: "not found" });
+        } else {
+          return rows;
+        }
       });
   } else {
     return Promise.reject({ status: 400, msg: "not found" });

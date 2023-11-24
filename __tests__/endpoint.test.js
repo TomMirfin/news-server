@@ -266,7 +266,7 @@ describe("sort query topic", () => {
   });
   // test("404 when given a query to a number that does not exist, respond with a bad request", () => {
   //   return request(app)
-  //     .get("/api/articles?notatopic=111223344")
+  //     .get("/api/articles?topics=111223344")
   //     .expect(404)
   //     .then(({ body }) => {
   //       expect(body.msg).toBe("bad request");
