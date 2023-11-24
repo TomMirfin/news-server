@@ -32,7 +32,6 @@ exports.patchArticle = (article_id, newVote) => {
         [article_id, newVotes]
       )
       .then(({ rows }) => {
-        console.log(rows);
         if (!rows.length) {
           return Promise.reject({ status: 404, msg: "not found" });
         } else {
