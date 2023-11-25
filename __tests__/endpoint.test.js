@@ -190,7 +190,7 @@ describe("DELETE comment by ID", () => {
       .delete("/api/not-a-comment/3")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toEqual("bad request");
+        expect(body.msg).toEqual("not found");
       });
   });
   test("400 reponse an error if trying to delete on path that that does not exist ", () => {
@@ -211,15 +211,15 @@ describe("DELETE comment by ID", () => {
   });
 });
 
-describe("query for GET /api/articles/:article_id (comment_count)", () => {
-  test("The query will respons with a topic which includes the comment count", () => {
+describe(" GET /api/articles/:article_id (comment_count)", () => {
+  test("The endpoint will respond with a topic which includes the comment count", () => {
     return request(app)
-      .get("/api/articles/2?include=comment_count")
+      .get("/api/articles/1")
       .expect(200)
       .then(({ body }) => {
         expect(body).toHaveLength(1);
         body.forEach((article) => {
-          expect(article.article_id).toBe(2);
+          expect(article.article_id).toBe(1);
           expect(typeof article.article_img_url).toBe("string");
           expect(typeof article.author).toBe("string");
           expect(typeof article.body).toBe("string");
@@ -233,27 +233,22 @@ describe("query for GET /api/articles/:article_id (comment_count)", () => {
   });
   test("400 responds with an error if the article does not exist", () => {
     return request(app)
-      .get("/api/articles/19?include=comment_count")
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe("bad request");
-      });
-  });
-  test("400 responds with an error if the query is incorrect", () => {
-    return request(app)
-      .get("/api/articles/2?include=comment_notcount")
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe("bad request");
-      });
-  });
-  test("404 responds with an error if the pathway is incorrect", () => {
-    return request(app)
-      .get("/api/comments/2?include=comment_notcount")
+      .get("/api/articles/19")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("not found");
+      });
+  });
 
+  test("404 responds with an error if the pathway is incorrect", () => {
+    return request(app)
+      .get("/api/comments/2")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("not found");
+      });
+  });
+});
 describe("get all /api/users", () => {
   test("Then endpoint will respond with an array of user objects with types checked", () => {
     return request(app)
@@ -276,13 +271,12 @@ describe("get all /api/users", () => {
         expect(body).toMatchObject(users);
       });
   });
-  test("status:400, responds with an error message when passed a bad path", () => {
+  test("status:404, responds with an error message when passed a bad path", () => {
     return request(app)
       .get("/api/notusers")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("bad request");
-
+        expect(body.msg).toBe("not found");
       });
   });
 });
