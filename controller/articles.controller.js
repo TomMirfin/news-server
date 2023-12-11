@@ -1,8 +1,11 @@
+const { sort } = require("../db/data/test-data/articles");
 const { selectAllArticles, patchArticle } = require("../model/article-model");
 const { selectArticlesById } = require("../model/article-model");
 
 exports.getAllArticles = (req, res, next) => {
-  selectAllArticles()
+  const { sorted_by } = req.query;
+
+  selectAllArticles(sorted_by)
     .then((articles) => {
       res.status(200).send(articles);
     })

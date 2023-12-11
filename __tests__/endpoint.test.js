@@ -242,3 +242,25 @@ describe("get all /api/users", () => {
       });
   });
 });
+describe(" GET /api/articles (sorting queries)", () => {
+  test(" DESCENDING when query is sorted by the endpoint will be given order which will return th arrticles by asc on created-at", () => {
+    return request(app)
+      .get("/api/articles?sorted_by=ASC")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toBeSortedBy(body.created_at, {
+          ascending: true,
+        });
+      });
+  });
+  test("ACENDING when query is sorted by the endpoint will be given order which will return th arrticles by on created-at", () => {
+    return request(app)
+      .get("/api/articles?sorted_by=DESC")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toBeSortedBy(body.created_at, {
+          ascending: false,
+        });
+      });
+  });
+});
