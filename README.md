@@ -8,7 +8,7 @@ This project is the backend of a social news website and forum where users can p
 How to run locally -
 1.You will need to clone the repo: https://github.com/TomMirfin/news-server
 
-git clone [https://github.com/NathanLee3296/news-server](https://github.com/TomMirfin/news-server.git)
+git clone https://github.com/TomMirfin/news-server.git
 Install NPM dependencies from the package.json file
 npm install
 Setup and seed the databases
